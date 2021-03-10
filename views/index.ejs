@@ -1,5 +1,35 @@
 <%- include('partials/header') %>
+<%- include('partials/homenavbar') %>
 <body>
-    <h1>OLÁ MUNDO!</h1>
+    <div class="container">
+        <hr>
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Bem vindo!
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <strong>Este é um simples blog do Guia do Programador</strong> Descrição detalhada
+                </div>
+              </div>
+            </div>
+        </div>
+        <hr>
+        <% articles.forEach(article => { %>
+            <div class="card">
+                <div class="card-header">
+                    <h2><%= article.title %></h2>
+                </div>
+                <div class="card-body">
+                    <a href="/<%= article.slug %>" class="btn btn-success">Ler artigo</a>
+                </div>
+            </div>
+        
+        <% }) %>
+
+    </div>
 </body>
 <%- include('partials/footer') %>
