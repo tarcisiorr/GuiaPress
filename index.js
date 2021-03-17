@@ -1,17 +1,25 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+const session = require("express-session");
 const connection = require("./database/database");
 
 const categoriesController = require("./categories/CategoriesController");
 const articlesController = require("./articles/ArticlesController");
+const usersController = require("./user/UsersController");
 
 const Article = require("./articles/Article");
 const Category = require("./categories/Category");
+const User = require("./user/User");
 
 
 // View engine
 app.set('view engine', 'ejs');
+
+// Sessions
+app.use(session({
+    secret: "qualquercoisabemaleatoria", cookie: {maxAge: 30000}
+}))
 
 // Config para o express trabalhar com arquivos staticos
 // Static
@@ -32,12 +40,38 @@ connection
 
 app.use("/", categoriesController);
 app.use("/", articlesController);
+app.use("/", usersController);
+
+app.get("/session", (req, res) => {
+    req.session.treinamento = "Formação Node.js"
+    req.session.ano = 2021
+    req.session.email = "victor@udemy.com"
+    req.session.user = {
+        username : "victorlima",
+        email : "email@email.com",
+        id: 10
+    }
+    res.send("Sessão gerada!");
+});
+
+app.get("/leitura", (req, res) => {
+    res.json({
+        treinamento: req.session.treinamento,
+        ano: req.session.ano,
+        email: req.session.email,
+        user: req.session.user
+    });
+});
+
+
+
 
 app.get("/", (req, res) => {
     Article.findAll({
         order:[
             ['id', 'DESC']
-        ]
+        ],
+        limit: 4
     }).then(articles => {
         Category.findAll().then(categories => {
             res.render("index", {articles: articles, categories: categories});
